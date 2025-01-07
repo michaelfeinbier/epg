@@ -1,21 +1,14 @@
 FROM node:lts-bookworm-slim
 
-RUN mkdir -p /build && chown node:node /build
+RUN install -d -g node -o node /build && \
+  npm install pm2 -g
 WORKDIR /build
 
-COPY yarn.lock ./yarn.lock
-COPY package.json ./package.json
-COPY package-lock.json ./package-lock.json
+COPY --chown=node:node . .
 
-RUN npm ci --ignore-scripts
-
-COPY . .
-COPY docker/ecosystem.config.js ./ecosystem.config.js
-COPY docker/serve.json ./serve.json
-
-RUN npm install pm2 -g
 USER node
-RUN npm run postinstall
+RUN npm ci --ignore-scripts && \
+  npm run postinstall
 
 # Set some application defaults
 ENV NODE_ENV=production \
@@ -23,4 +16,4 @@ ENV NODE_ENV=production \
     GZIP=true
 
 EXPOSE 3000
-CMD [ "pm2-runtime", "ecosystem.config.js" ]
+CMD [ "pm2-runtime", "docker/ecosystem.config.js" ]
