@@ -1,6 +1,6 @@
 FROM node:lts-bookworm-slim
 
-RUN install -d -g node -o node /build && \
+RUN install -d -g node -o node /build /build/public && \
     npm install pm2 -g
 WORKDIR /build
 USER node
