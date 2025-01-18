@@ -160,7 +160,7 @@ function getCategories(item) {
 }
 
 function getIcon(item) {
-  return item.icon && item.icon.length ? item.icon[0] : null
+  return item.icon && item.icon.length ? item.icon[0].src : null
 }
 
 function parseItems(content, channel, date) {
@@ -172,14 +172,17 @@ function parseItems(content, channel, date) {
     if (!data || !Array.isArray(data.programs)) return []
 
     return data.programs
-      .filter(p => p.channel === site_id && dayjs(p.start, 'YYYYMMDDHHmmss ZZ').isBetween(curr_day, next_day))
+      .filter(
+        p =>
+          p.channel === site_id && dayjs(p.start, 'YYYYMMDDHHmmss ZZ').isBetween(curr_day, next_day)
+      )
       .map(p => {
         if (Array.isArray(p.date) && p.date.length) {
           p.date = p.date[0]
         }
         return p
       })
-  } catch (error) {
+  } catch {
     return []
   }
 }
