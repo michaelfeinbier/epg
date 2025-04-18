@@ -40,13 +40,15 @@ npm install
 
 ## Usage
 
-To start the download of the guide, select one of the [supported sites](SITES.md) and paste its name into the command below:
+To start the download of the guide, select one of the supported sites from [SITES.md](SITES.md) file and paste its name into the command below:
 
 ```sh
 npm run grab --- --site=example.com
 ```
 
-And once the download is complete, the guide will be saved to the `guide.xml` file.
+Then run it and wait for the guide to finish downloading. When finished, a new `guide.xml` file will appear in the current directory.
+
+You can also customize the behavior of the script using this options:
 
 ```sh
 Usage: npm run grab --- [options]
@@ -86,7 +88,6 @@ http://localhost:3000/guide.xml
 In addition it will be available to other devices on the same local network at the address:
 
 ```
-http://<your_local_ip_address>:3000/guide.xml
 ```
 
 ### Parallel downloading
@@ -119,11 +120,41 @@ npm run grab --- --channels=path/to/custom.channels.xml
 
 ### Run on schedule
 
-If you want to download the guide automatically on a schedule, you need to pass a valid [cron expression](https://crontab.guru/) to the script using the `--cron` attribute:
+To download the guide on a schedule, you can use the included process manager. Just run it with desire [cron expression](https://crontab.guru/) and the `grab` options:
 
 ```sh
-npm run grab --- --site=example.com --cron="0 0 * * *"
+npx pm2 start npm --no-autorestart --cron-restart="0 0,12 * * *" -- run grab --- --site=example.com
 ```
+
+To track the process, you can use the command:
+
+```sh
+npx pm2 logs
+```
+
+For more info go to [pm2](https://pm2.keymetrics.io/docs/usage/quick-start/) documentation.
+
+### Access the guide by URL
+
+You can make the guide available via URL by running your own server. The easiest way to do this is to run this command:
+
+```sh
+npx serve
+```
+
+After that, the guide will be available at the link:
+
+```
+http://localhost:3000/guide.xml
+```
+
+In addition it will be available to other devices on the same local network at the address:
+
+```
+http://<your_local_ip_address>:3000/guide.xml
+```
+
+For more info go to [serve](https://github.com/vercel/serve) documentation.
 
 ## Update
 
@@ -138,10 +169,6 @@ And then update all the dependencies:
 ```sh
 npm install
 ```
-
-## Playlists
-
-Playlists with already linked guides can be found in the [iptv-org/iptv](https://github.com/iptv-org/iptv) repository.
 
 ## Database
 

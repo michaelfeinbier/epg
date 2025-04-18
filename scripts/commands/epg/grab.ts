@@ -44,7 +44,7 @@ export type GrabOptions = {
   delay?: string
   lang?: string
   days?: number
-  cron?: string
+  proxy?: string
 }
 
 const options: GrabOptions = program.opts()
@@ -82,18 +82,8 @@ async function main() {
   }
   logger.info(`  found ${parsedChannels.count()} channel(s)`)
 
-  let runIndex = 1
-  if (options.cron) {
-    const cronJob = new CronJob(options.cron, async () => {
-      logger.info(`run #${runIndex}:`)
-      await runJob({ logger, parsedChannels })
-      runIndex++
-    })
-    cronJob.start()
-  } else {
-    logger.info(`run #${runIndex}:`)
-    runJob({ logger, parsedChannels })
-  }
+  logger.info('run:')
+  runJob({ logger, parsedChannels })
 }
 
 main()
